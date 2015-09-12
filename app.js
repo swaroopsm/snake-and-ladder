@@ -8,6 +8,7 @@ board.addSnake(12, 2);
 board.addSnake(17, 4);
 
 // Add Ladders
+board.addLadder(2, 25);
 
 // Add Players
 board.addPlayer('Striker')

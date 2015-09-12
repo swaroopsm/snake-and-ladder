@@ -1,5 +1,6 @@
 var Cell = require('./cell.js');
 var Snake = require('./snake.js');
+var Ladder = require('./ladder.js');
 var Player = require('./player.js');
 
 function Board(n) {
@@ -10,6 +11,7 @@ function Board(n) {
   this.totalCells = n;
   this.cells = {};
   this.snakes = {};
+  this.ladders = {};
   this.players = [];
   this.currentPlayer = null;
 
@@ -36,12 +38,20 @@ Board.prototype.getSnakeAt = function(val) {
   return this.snakes[val];
 };
 
+Board.prototype.getLadderAt = function(val) {
+  return this.ladders[val];
+};
+
 Board.prototype.rollDice = function() {
   return Math.floor((Math.random() * 6) + 1);
 };
 
 Board.prototype.addSnake = function(head, tail) {
   this.snakes[head] = new Snake(head, tail);
+};
+
+Board.prototype.addLadder = function(from, to) {
+  this.ladders[from] = new Snake(from, to);
 };
 
 Board.prototype.addPlayer = function(name) {
@@ -61,7 +71,7 @@ Board.prototype.start = function(_index) {
   status = this.playAndIsWinner();
 
   if(status) {
-    console.log(this.currentPlayer.name + " Wins!");
+    this.reportDetails();
     return;
   }
   else {
@@ -82,25 +92,35 @@ Board.prototype.playAndIsWinner = function() {
   var diceValue = this.rollDice(),
       cell,
       snake,
+      ladder,
       player = this.currentPlayer,
       tempPosition = diceValue + player.position;
 
   cell = this.getCellAt(tempPosition);
-  snake = this.getSnakeAt(tempPosition);
 
   player.paths.push(tempPosition);
 
   if(cell) {
+    // Check if the current cell has a snake
+    snake = this.getSnakeAt(tempPosition);
+    
+    // Check if the current cell has a ladder
+    ladder = this.getLadderAt(tempPosition);
+
     if(snake) {
       player.position = snake.tail;
       player.paths.push(snake.tail);
+    }
+    else if(ladder) {
+      player.position = ladder.to;
+      player.paths.push(ladder.to);
     }
     else {
       if(tempPosition <= this.totalCells) {
         player.position += diceValue;
       }
     }
-
+    
     if(player.position === this.totalCells) {
       return true;
     }
@@ -111,6 +131,10 @@ Board.prototype.playAndIsWinner = function() {
   else {
     return false;
   }
+};
+
+Board.prototype.reportDetails = function() {
+
 };
 
 module.exports = Board;
