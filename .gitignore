@@ -26,4 +26,3 @@ build/Release
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
->>>>>>> b27ccd9570ff481af6c1e86c7e8a11cd3ee2d39b

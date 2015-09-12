@@ -1,3 +1,4 @@
+// Initialize the Board
 var Board = require('./src/board.js');
 
 // Set the board with total number of cells
